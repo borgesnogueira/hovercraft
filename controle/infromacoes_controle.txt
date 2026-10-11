@@ -1,0 +1,16 @@
+11/10/2026 - NAO TESTADO COM OS SERVOS
+
+HELICE ESQUERDA:
+- conectada aos botões analogicos: joystick esquerdo e setas acima dele.
+- para cima e para a direita == aumenta
+- para baixo e para a esquerda == diminui
+
+HELICE DIREITA:
+- conectada aos botoes digitais: joystick direito e numeros acima dele
+- para cima e para a direita == 4 e 3 == aumenta
+- para baixo e para a esquerda == 2 e 1 == diminui
+
+HELICE CENTRAL:
+- conectada aos botoes digitais posteriores
+- 5 e 6 == aumenta
+- 7 e 8 == dimunui

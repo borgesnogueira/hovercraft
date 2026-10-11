@@ -1,0 +1,13 @@
+# Compilacao
+.vscode/
+.idea/
+build/
+.pio/
+
+# Python
+__pycache__/
+*.pyc
+*.env
+
+# Logs do sistema
+*.log
