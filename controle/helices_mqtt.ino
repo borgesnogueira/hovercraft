@@ -4,8 +4,8 @@
 #include <ESP32Servo.h>
 #include <MQTT.h>
 #include <WiFi.h>
-const char *ssid = "Gilson Alves"; //colocar a rede que vai conectar
-const char *password = "f28l11i25l5";  //senha da rede
+const char *ssid = "..."; //colocar a rede que vai conectar
+const char *password = "...";  //senha da rede
 const char *mqtt_broker = "test.mosquitto.org";
 WiFiClient client;
 MQTTClient mqtt;
