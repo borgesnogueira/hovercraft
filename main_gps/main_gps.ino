@@ -1,3 +1,8 @@
+"""
+Para compilar no Arduino IDE basta selecionar a pasta main_gps/ e compilar
+o arquivo de mesmo nome, os outros serão lidos automaticamente
+"""
+
 #include <Arduino.h>
 #include <Wire.h>
 #include "SSD1306Wire.h"
