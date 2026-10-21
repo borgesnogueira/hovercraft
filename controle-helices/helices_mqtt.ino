@@ -7,6 +7,7 @@
 const char *ssid = "..."; //colocar a rede que vai conectar
 const char *password = "...";  //senha da rede
 const char *mqtt_broker = "test.mosquitto.org";
+const char *topic_prefix = "hovercraft/ect/";
 WiFiClient client;
 MQTTClient mqtt;
  
@@ -26,27 +27,34 @@ int converterAngulo(float val_joy, float speedMax = 1.0)
 
 void connect()
 {
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+  // Conecta ao Wi-Fi se ainda não estiver conectado
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.print("Connecting to WiFi: ");
+    Serial.println(ssid);
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.println("\nWiFi Conectado!");
+  }
+  // Conecta ao broker MQTT com um ClientID único baseado no MAC da placa
+  Serial.print("Conectando ao broker MQTT...");
+  String clientId = "ESP32_Hovercraft_" + String((uint32_t)ESP.getEfuseMac(), HEX);
+  while (!mqtt.connect(clientId.c_str())) {
     Serial.print(".");
+    delay(1000);
   }
 
-  mqtt.begin(mqtt_broker, client);
-  mqtt.setTimeout(2000);
+  Serial.println("\nConectado ao broker MQTT com sucesso!");
+  // Inscrição nos tópicos com o prefixo
+  String prefix = String(topic_prefix);
+  mqtt.subscribe(prefix + "helice_direita_x");
+  mqtt.subscribe(prefix + "helice_direita_y");
+  mqtt.subscribe(prefix + "helice_esquerda_x");
+  mqtt.subscribe(prefix + "helice_esquerda_y");
+  mqtt.subscribe(prefix + "helice_centro_y");
 
-  Serial.println("\nConectado ao broker MQTT");
-
-  mqtt.subscribe("helice_direita_x");
-  mqtt.subscribe("helice_direita_y");
-
-  mqtt.subscribe("helice_esquerda_x");
-  mqtt.subscribe("helice_esquerda_y");
-
-  mqtt.subscribe("helice_centro_y");
 }
 
 void setup() 
@@ -57,6 +65,10 @@ void setup()
   esquerda.attach(HEL_ESQ);
   direita.attach(HEL_DIR);
 
+  // Inicializa o broker MQTT
+  mqtt.begin(mqtt_broker, client);
+  mqtt.setTimeout(2000);
+
   mqtt.onMessage([](String topic, String payload){
     Serial.print("Chegou no topico: [");
     Serial.print(topic);
@@ -66,27 +78,27 @@ void setup()
 
     float val = payload.toFloat();
 
-    if (topic == "helice_direita_x")
+    if (topic.endsWith("helice_direita_x"))
     {
       int angulo = converterAngulo(val);
       direita.write(angulo);
     }
-    else if (topic == "helice_direita_y")
+    else if (topic.endsWith("helice_direita_y"))
     {
       int angulo = converterAngulo(val);
       direita.write(angulo);
     }
-    else if (topic == "helice_esquerda_x")
+    else if (topic.endsWith("helice_esquerda_x"))
     {
       int angulo = converterAngulo(val);
       esquerda.write(angulo);
     }
-    else if (topic == "helice_esquerda_y")
+    else if (topic.endsWith("helice_esquerda_y"))
     {
       int angulo = converterAngulo(val);
       esquerda.write(angulo);
     }
-    else if (topic == "helice_centro_y")
+    else if (topic.endsWith("helice_centro_y"))
     {
       int angulo = converterAngulo(val);
       centro.write(angulo);
@@ -100,6 +112,7 @@ void setup()
 void loop() 
 {
   mqtt.loop();
+  delay(10);
 
   // Reconecta se a conexão cair
   if (!mqtt.connected()) {

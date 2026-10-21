@@ -12,5 +12,5 @@ HELICE DIREITA:
 
 HELICE CENTRAL:
 - conectada aos botoes digitais posteriores
-- 5 e 6 == aumenta
-- 7 e 8 == dimunui
+- 5 == diminui
+- 6 == aumenta
