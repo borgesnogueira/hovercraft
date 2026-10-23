@@ -122,7 +122,7 @@ O código do firmware pode ser compilado e gravado no ESP32 utilizando:
 1. **Python 3.x** instalado no computador de controle.
 2. Bibliotecas do ecossistema Arduino/ESP32:
    * `TinyGPS++` (para parsing de sentenças NMEA do NEO-6M).
-   * `PubSubClient` (para cliente MQTT no ESP32).
+   * `MQTT.h` (para cliente MQTT no ESP32).
 3. Dependência Python para o script de controle:
    ```bash
    pip install paho-mqtt
