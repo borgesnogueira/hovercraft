@@ -120,7 +120,6 @@ def main() -> None:
             publish_if_changed(client, "helice_direita_x", right_motion_x)
             publish_if_changed(client, "helice_direita_y", right_motion_y)
 
-            # 3. HÉLICE CENTRAL
             # Um botão liga no máximo (1.0) e outro desliga totalmente (-1.0)
             if joystick.get_button(BUTTON_LIFT_ON):
                 lift_power = 1.0
