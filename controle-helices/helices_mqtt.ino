@@ -6,7 +6,7 @@
 #include <WiFi.h>
 const char *ssid = "..."; //colocar a rede que vai conectar
 const char *password = "...";  //senha da rede
-const char *mqtt_broker = "test.mosquitto.org";
+const char *mqtt_broker = "127.0.0.1";
 const char *topic_prefix = "hovercraft/ect/";
 WiFiClient client;
 MQTTClient mqtt;
