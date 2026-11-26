@@ -57,6 +57,7 @@ def publish_if_changed(client: mqtt.Client, topic_suffix: str, value: float, thr
     if last_val is None or abs(value - last_val) >= threshold or (value == 0.0 and last_val != 0.0):
         client.publish(topic, str(round(value, 2)))
         last_sent_values[topic_suffix] = value
+        print(f"{topic_suffix} publicou = {value:.3f}")
 
 
 def main() -> None:
@@ -92,6 +93,9 @@ def main() -> None:
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
+            elif event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:
+                    running = False
 
         if joystick:
             # JOYSTICK ESQUERDO (Eixos 0 e 1)
@@ -105,17 +109,11 @@ def main() -> None:
             publish_if_changed(client, "helice_esquerda_y", left_motion_y)
 
             # JOYSTICK DIREITO (Botões 0, 1, 2, 3)
-            right_motion_x = 0.0
-            right_motion_y = 0.0
+            raw_rx = joystick.get_axis(2)
+            raw_ry = - joystick.get_axis(3)
 
-            if joystick.get_button(2):  # Direita
-                right_motion_x -= SPEED
-            if joystick.get_button(0):  # Esquerda
-                right_motion_x += SPEED
-            if joystick.get_button(3):  # Cima
-                right_motion_y -= SPEED
-            if joystick.get_button(1):  # Baixo
-                right_motion_y += SPEED
+            right_motion_x = raw_rx * SPEED if abs(raw_rx) > DEADZONE else 0.0
+            right_motion_y = raw_ry * SPEED if abs(raw_ry) > DEADZONE else 0.0
 
             publish_if_changed(client, "helice_direita_x", right_motion_x)
             publish_if_changed(client, "helice_direita_y", right_motion_y)
